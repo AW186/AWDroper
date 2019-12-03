@@ -100,10 +100,9 @@ char * FileTreeNode::toPath() {
         memcpy(retval, buff, strlen(buff));
         retval[strlen(buff)] = '/';
         memcpy((retval+strlen(buff)+1), this->data, strlen(this->data));
-        free(buff);
         return retval;
     } else {
-        return copy(this->data);
+        return "root";
     }
 }
 

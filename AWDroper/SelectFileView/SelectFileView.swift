@@ -10,9 +10,11 @@ import Foundation
 import Cocoa
 
 class SelectFileView: NSView {
+    weak var delegate: SelectFileViewDelegate?
+    let label: NSTextField = NSTextField()
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
-        
+        setupSelf()
     }
     override func layout() {
         super.layout()
@@ -34,6 +36,10 @@ extension SelectFileView {
         panel.canChooseDirectories = true
         panel.canChooseFiles = true
         panel.canCreateDirectories = true
+        panel.runModal()
+        if let url = panel.url {
+            delegate?.fileDidOpened(url: url)
+        }
     }
 }
 

@@ -10,6 +10,7 @@ import Foundation
 import Cocoa
 
 class HostView: NSView {
+    private var selectFileView              = SelectFileView()
     private var headerView: HeaderView      = HeaderView()
     private var ipLabel: NSTextField        = NSTextField()
     private var passordLabel: NSTextField   = NSTextField()
@@ -36,6 +37,7 @@ extension HostView {
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         setupContentView()
+        setupSelectFileView()
         setupBottomView()
         setupHeaderView()
         setupIPLabel()
@@ -47,11 +49,23 @@ extension HostView {
         layoutIPLabel()
         layoutPassordLabel()
         layoutBottomView()
+        layoutSelectFileView()
         layoutContentView()
     }
 }
 
 extension HostView {
+    private func layoutSelectFileView() {
+        selectFileView.frame = self.bounds
+        selectFileView.frame.size.width = 100
+        selectFileView.frame.size.height -= self.headerView.height+self.bottomView.height
+        selectFileView.frame.origin.y += self.bottomView.height
+    }
+    private func setupSelectFileView() {
+        selectFileView.removeFromSuperview()
+        selectFileView.delegate = self
+        self.addSubview(selectFileView)
+    }
     private func setupBottomView() {
         bottomView.removeFromSuperview()
         bottomView.delegate = self
@@ -71,6 +85,8 @@ extension HostView {
         contentView.frame = self.bounds
         contentView.frame.size.height -= headerView.height+bottomView.height
         contentView.frame.origin.y += bottomView.height
+        contentView.frame.size.width -= selectFileView.frame.width
+        contentView.frame.origin.x += selectFileView.frame.width
     }
     private func setupHeaderView() {
         headerView.removeFromSuperview()
@@ -127,8 +143,16 @@ extension HostView: BottomViewDelegate {
         
     }
     func backToPreviousDirectory() {
-        contentView.data = contentView.data.getSuper()
-        bottomView.data = contentView.data.getSuper()
+        let data = contentView.data.getSuper()
+        contentView.data = data!
+        bottomView.data = data!
+    }
+}
+extension HostView: SelectFileViewDelegate {
+    func fileDidOpened(url: URL) {
+        if(link(url.absoluteString, contentView.data.getPath()+"/text.txt") != 0) {
+            perror("link err")
+        }
     }
 }
 

@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol SelectFileViewDelegate {
-    
+protocol SelectFileViewDelegate: class {
+    func fileDidOpened(url: URL)
 }
