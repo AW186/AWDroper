@@ -19,8 +19,9 @@ extern "C" {
 }
 #include "StringOP.hpp"
 #include "ArrayList.hpp"
+#include "AWFileInfo.hpp"
 
-class FileTree: public Tree<char *> {
+class FileTree: public Tree<AWFileInfo> {
 public:
     FileTree(const char* directoryPath);
     FileTree() {}

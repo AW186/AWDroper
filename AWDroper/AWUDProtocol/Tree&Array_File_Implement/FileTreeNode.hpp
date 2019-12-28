@@ -11,6 +11,7 @@
 
 #include "FileTree.hpp"
 #include "Tree.hpp"
+#include "AWFileInfo.hpp"
 extern "C" {
     #include <stdio.h>
     #include <dirent.h>
@@ -20,13 +21,14 @@ enum CreatNodeError {
     notDirectory
 };
     
-class FileTreeNode: public Tree<char *>::Node {
+class FileTreeNode: public Tree<AWFileInfo>::Node {
 public:
     FileTreeNode();
     FileTreeNode(const char* path);
     static FileTreeNode* deserializedFromString(const char *str);
     char * toString();
     char * toPath();
+    char * toAbsPath();
 private:
     FileTreeNode(dirent* file, const char* directory);
 };

@@ -23,7 +23,14 @@ public:
         Node(T data) {
             this->data = data;
         }
-        void remove();
+        void remove() {
+            if (this->nextNode != nullptr) {
+                nextNode->prelink(this->previousNode);
+            } else {
+                this->previousNode->nextNode = NULL;
+            }
+            delete this;
+        }
         void prolink(Node* node) {
             if (node != NULL) {
                 node->previousNode = this;
@@ -49,6 +56,15 @@ public:
         Node* node = new Node(data);
         node->prolink(this->rootNode->nextNode);
         node->prelink(this->rootNode);
+    }
+    int removeChild(T data) {
+        for(Node* node = rootNode; node != nullptr; node = node->nextNode) {
+            if (node->data == data) {
+                node->remove();
+                return 0;
+            }
+        }
+        return 1;
     }
     int removeAt(int index);
     int insert(T data, int index);

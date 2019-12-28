@@ -9,6 +9,8 @@
 import Foundation
 
 protocol FileViewDelegate: class {
+    func rename(data: OCFileTreeNode, name: String)
+    func delete(data: OCFileTreeNode)
     func enterFolder(data: OCFileTreeNode)
     func tintWillSet()
 }

@@ -8,8 +8,12 @@
 
 
 #include "FileTreeNode.hpp"
-FileTreeNode::FileTreeNode() { }
+FileTreeNode::FileTreeNode() {
+    this->setData(AWFileInfo());
+    printf("to string1: %s\n", toString());
+}
 FileTreeNode::FileTreeNode(const char *path) {
+    this->setData(AWFileInfo());
     struct stat* fileStat = (struct stat *)malloc(sizeof(struct stat));
     if (stat(path, fileStat) != 0) {
         throw notFileOrDirectory;
@@ -31,17 +35,18 @@ FileTreeNode::FileTreeNode(const char *path) {
     } else {
         throw notDirectory;
     }
-    this->data = copy(path);
+    this->setData(AWFileInfo(copy(path), DT_DIR));
 }
 
 FileTreeNode::FileTreeNode(dirent *file, const char* directory) {
+    this->setData(AWFileInfo());
     //Form a path
     char *fileName = copy(file->d_name);
     if((strcmp(fileName, ".") == 0) || (strcmp(fileName, "..") == 0)) {
         return;
     }
-    this->data = fileName;
     if (file->d_type == DT_DIR) {
+        this->setData(AWFileInfo(fileName, DT_DIR));
         size_t length = strlen(fileName)+strlen(directory)+2;
         char *path = (char *)malloc(length);
         bzero(path, length);
@@ -59,14 +64,18 @@ FileTreeNode::FileTreeNode(dirent *file, const char* directory) {
             }
         }
         closedir(dir);
+    } else {
+        this->setData(AWFileInfo(fileName, DT_REG));
     }
 }
 
 char * FileTreeNode::toString() {
-    if (this->count() > 0) {
+    if (this->count() <= 0) {
+        return copy(this->getData().toString());
+    } else {
         char *retval;
         ArrayList<Node *>::Node* node = this->children->rootNode->nextNode;
-        retval = copy(node->data->data);
+        retval = copy(node->data->getData().toString());
         while (node->nextNode != NULL) {
             char *buff = ((FileTreeNode *)node->nextNode->data)->toString();
             char *sum = (char *)malloc(strlen(buff)+strlen(retval)+2);
@@ -78,28 +87,40 @@ char * FileTreeNode::toString() {
             retval = sum;
             node = node->nextNode;
         }
-        char *buff = copy(this->data);
+        char *buff = copy(this->getData().toString());
         char *sum = (char *)malloc(strlen(buff)+strlen(retval)+3);
         bzero(sum, strlen(buff)+strlen(retval)+3);
         memcpy(sum, buff, strlen(buff));
         sum[strlen(buff)] = '{';
         memcpy((sum+strlen(buff)+1), retval, strlen(retval));
-        free(buff);
         sum[strlen(buff)+strlen(retval)+1] = '}';
+        free(buff);
         return sum;
+    }
+}
+
+char * FileTreeNode::toAbsPath() {
+    if (this->parent != NULL) {
+        char *buff = ((FileTreeNode *)this->parent)->toAbsPath();
+        char *retval = (char *)malloc(strlen(buff)+strlen(this->getData().name)+2);
+        bzero(retval, strlen(buff)+strlen(this->getData().name)+2);
+        memcpy(retval, buff, strlen(buff));
+        retval[strlen(buff)] = '/';
+        memcpy((retval+strlen(buff)+1), this->getData().name, strlen(this->getData().name));
+        return retval;
     } else {
-        return copy(this->data);
+        return this->getData().name;
     }
 }
 
 char * FileTreeNode::toPath() {
     if (this->parent != NULL) {
         char *buff = ((FileTreeNode *)this->parent)->toPath();
-        char *retval = (char *)malloc(strlen(buff)+strlen(this->data)+2);
-        bzero(retval, strlen(buff)+strlen(this->data)+2);
+        char *retval = (char *)malloc(strlen(buff)+strlen(this->getData().name)+2);
+        bzero(retval, strlen(buff)+strlen(this->getData().name)+2);
         memcpy(retval, buff, strlen(buff));
         retval[strlen(buff)] = '/';
-        memcpy((retval+strlen(buff)+1), this->data, strlen(this->data));
+        memcpy((retval+strlen(buff)+1), this->getData().name, strlen(this->getData().name));
         return retval;
     } else {
         return "root";
@@ -107,17 +128,15 @@ char * FileTreeNode::toPath() {
 }
 
 FileTreeNode* FileTreeNode::deserializedFromString(const char *str) {
-    printf("serialized string: %s\n\n", str);
     FileTreeNode* retval = new FileTreeNode();
     int index = 0;
     while(str[index] != '{' && str[index] != '\0')
         index++;
-    retval->data = copy(str, 0, index);
+    retval->setData(AWFileInfo(copy(str, 0, index)));
     if (str[index++] == '{') {
         int numberOfLayer = 1;
         int nodeInfoBegin = index;
         while(numberOfLayer > 0) {
-//            printf("numberOfLayer: %d\n", numberOfLayer);
             switch (str[index++]) {
                 case '{':
                     numberOfLayer++;

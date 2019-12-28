@@ -12,7 +12,7 @@
 #include "FileTreeNode.hpp"
 
 FileTree::FileTree(const char *directoryPath) {
-    this->rootNode = (Tree<char *>::Node *)(new FileTreeNode(directoryPath));
+    this->rootNode = (Tree<AWFileInfo>::Node *)(new FileTreeNode(directoryPath));
 }
 
 char * FileTree::toString() {

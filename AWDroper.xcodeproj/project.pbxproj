@@ -64,6 +64,10 @@
 		929B25CB237ADA650021857C /* ServerTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 929B25C9237ADA650021857C /* ServerTask.cpp */; };
 		929EB5182390CF2100EAEC7D /* SelectFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929EB5172390CF2100EAEC7D /* SelectFileView.swift */; };
 		929EB51A2390D32000EAEC7D /* SelectFileViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929EB5192390D32000EAEC7D /* SelectFileViewDelegate.swift */; };
+		92CC66B6239FC1A00055BC00 /* AWFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CC66B4239FC1A00055BC00 /* AWFileInfo.cpp */; };
+		92CE2E1123A65BED001FB535 /* GuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CE2E1023A65BED001FB535 /* GuestView.swift */; };
+		92CE2E1323A65D6D001FB535 /* GuestFileTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CE2E1223A65D6D001FB535 /* GuestFileTableView.swift */; };
+		92CE2E1523A65D83001FB535 /* GuestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CE2E1423A65D83001FB535 /* GuestViewController.swift */; };
 		92DE69AF237BB54700F48324 /* ClientTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92DE69AD237BB50D00F48324 /* ClientTask.cpp */; };
 		92DE69B3237E4A7900F48324 /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DE69B1237E4A7800F48324 /* ScrollView.swift */; };
 		92DE69B4237E4A7900F48324 /* ScrollViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DE69B2237E4A7800F48324 /* ScrollViewDelegate.swift */; };
@@ -171,6 +175,11 @@
 		929B25CA237ADA650021857C /* ServerTask.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ServerTask.hpp; sourceTree = "<group>"; };
 		929EB5172390CF2100EAEC7D /* SelectFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFileView.swift; sourceTree = "<group>"; };
 		929EB5192390D32000EAEC7D /* SelectFileViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFileViewDelegate.swift; sourceTree = "<group>"; };
+		92CC66B4239FC1A00055BC00 /* AWFileInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AWFileInfo.cpp; sourceTree = "<group>"; };
+		92CC66B5239FC1A00055BC00 /* AWFileInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AWFileInfo.hpp; sourceTree = "<group>"; };
+		92CE2E1023A65BED001FB535 /* GuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestView.swift; sourceTree = "<group>"; };
+		92CE2E1223A65D6D001FB535 /* GuestFileTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestFileTableView.swift; sourceTree = "<group>"; };
+		92CE2E1423A65D83001FB535 /* GuestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestViewController.swift; sourceTree = "<group>"; };
 		92DE69AC237BB50D00F48324 /* ClientTask.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClientTask.hpp; sourceTree = "<group>"; };
 		92DE69AD237BB50D00F48324 /* ClientTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientTask.cpp; sourceTree = "<group>"; };
 		92DE69B1237E4A7800F48324 /* ScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
@@ -262,6 +271,8 @@
 				922C596A233DAF4300EE5BFC /* FileTreeNode.hpp */,
 				922C5966233DA7F400EE5BFC /* FileArray.cpp */,
 				922C5967233DA7F400EE5BFC /* FileArray.hpp */,
+				92CC66B4239FC1A00055BC00 /* AWFileInfo.cpp */,
+				92CC66B5239FC1A00055BC00 /* AWFileInfo.hpp */,
 			);
 			path = "Tree&Array_File_Implement";
 			sourceTree = "<group>";
@@ -300,6 +311,7 @@
 				927604B72338EC9E009CC071 /* Login */,
 				920DA4082361C2AC00AF15F4 /* BottomView */,
 				92611FC6237544DB004AF398 /* TableFlowView */,
+				92CE2E0F23A65BD4001FB535 /* GuestMainView */,
 				920DA3E2235D8E6300AF15F4 /* HostMainView */,
 				92DE69B7237F87C000F48324 /* FileView */,
 				927604D32339C299009CC071 /* AWUDProtocol */,
@@ -454,6 +466,16 @@
 				929EB5192390D32000EAEC7D /* SelectFileViewDelegate.swift */,
 			);
 			path = SelectFileView;
+			sourceTree = "<group>";
+		};
+		92CE2E0F23A65BD4001FB535 /* GuestMainView */ = {
+			isa = PBXGroup;
+			children = (
+				92CE2E1023A65BED001FB535 /* GuestView.swift */,
+				92CE2E1223A65D6D001FB535 /* GuestFileTableView.swift */,
+				92CE2E1423A65D83001FB535 /* GuestViewController.swift */,
+			);
+			path = GuestMainView;
 			sourceTree = "<group>";
 		};
 		92DE69B0237E4A7800F48324 /* ScrollView */ = {
@@ -616,6 +638,7 @@
 				922C596E233F5E5900EE5BFC /* StringOP.cpp in Sources */,
 				927604B92338ECAC009CC071 /* LoginViewController.swift in Sources */,
 				923E58D12364270B00854275 /* OCFileTree.mm in Sources */,
+				92CE2E1523A65D83001FB535 /* GuestViewController.swift in Sources */,
 				92DE69B6237F87B900F48324 /* FileView.swift in Sources */,
 				927604A123388AE3009CC071 /* AWAnimator.swift in Sources */,
 				927604BB2338F4D4009CC071 /* HostLoginView.swift in Sources */,
@@ -628,6 +651,7 @@
 				920DA3D323557DDD00AF15F4 /* LoginView.swift in Sources */,
 				927604B62338C95F009CC071 /* CGRect+Adjust.swift in Sources */,
 				922C5965233DA7EB00EE5BFC /* FileTree.cpp in Sources */,
+				92CE2E1323A65D6D001FB535 /* GuestFileTableView.swift in Sources */,
 				929B25CB237ADA650021857C /* ServerTask.cpp in Sources */,
 				927604EE2339CE4B009CC071 /* getIPAddress.swift in Sources */,
 				923D11C4233865D600970DA0 /* HomeView.swift in Sources */,
@@ -637,6 +661,7 @@
 				920DA4142361CA7F00AF15F4 /* HostFileView.swift in Sources */,
 				923E58D42369B7B400854275 /* OCFileTreeNode.mm in Sources */,
 				922C5952233B9D2C00EE5BFC /* DroperServer.cpp in Sources */,
+				92CC66B6239FC1A00055BC00 /* AWFileInfo.cpp in Sources */,
 				927604E42339C36A009CC071 /* AWUDProtocol.cpp in Sources */,
 				929EB5182390CF2100EAEC7D /* SelectFileView.swift in Sources */,
 				927604F5233A4112009CC071 /* AWLabelButton.swift in Sources */,
@@ -653,6 +678,7 @@
 				927604A923388AF4009CC071 /* CGRectExtension.swift in Sources */,
 				927604F0233A3687009CC071 /* NSViewExtension.swift in Sources */,
 				927604EB2339C395009CC071 /* Sockets.cpp in Sources */,
+				92CE2E1123A65BED001FB535 /* GuestView.swift in Sources */,
 				92611FCC23754552004AF398 /* TableFlowViewDelegate.swift in Sources */,
 				920DA3E4235D8E8700AF15F4 /* HostView.swift in Sources */,
 				92611FCA2375453F004AF398 /* TableFlowViewDataSource.swift in Sources */,

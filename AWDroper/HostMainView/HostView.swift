@@ -34,6 +34,9 @@ class HostView: NSView {
 }
 
 extension HostView {
+    func refreshCurrentDirectory() {
+        contentView.reload()
+    }
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         setupContentView()
@@ -150,9 +153,44 @@ extension HostView: BottomViewDelegate {
 }
 extension HostView: SelectFileViewDelegate {
     func fileDidOpened(url: URL) {
-        if(link(url.absoluteString, contentView.data.getPath()+"/text.txt") != 0) {
-            perror("link err")
+        if copyFileToCurrentDirectory(url: url) {
+            appendFile(url: url)
+            refreshCurrentDirectory()
         }
+    }
+    func appendFile(url: URL) {
+        contentView.data.appendData(url.lastPathComponent, Int8(DT_REG))
+    }
+    private func copyFileToCurrentDirectory(url: URL) -> Bool {
+        var path = url.absoluteString
+        path.removeFirst(7)
+        guard let fd = fopen(path, "r") else {
+            perror("open "+path)
+            if errno == 35 {
+                _ = alert(question: "Currently not supporting fileName what contains space", text: "you file: "+path, btns: ["confirm"])
+            }
+            return false
+        }
+        var number = 0
+        while(FileManager.default.fileExists(atPath: contentView.data.getAbsPath()+"/"+(number > 0 ? "\(number)" : "")+url.lastPathComponent)) {
+            number += 1
+        }
+        let dstPath = contentView.data.getAbsPath()+"/"+(number > 0 ? "\(number)" : "")+url.lastPathComponent
+        guard let dst = fopen(dstPath, "w") else {
+            perror("open "+dstPath)
+            return false
+        }
+        var bytesIn: Int
+        let buffer = malloc(1024)
+        bzero(buffer, 1024)
+        repeat {
+            bytesIn = fread(buffer, 1, 1024, fd)
+            fwrite(buffer, 1, bytesIn, dst)
+        } while(bytesIn > 0)
+        free(buffer)
+        fclose(dst)
+        fclose(fd)
+        return true
     }
 }
 

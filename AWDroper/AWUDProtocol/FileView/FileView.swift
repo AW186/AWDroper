@@ -20,17 +20,17 @@ class FileView: TableFlowCellView {
     }
     var format: Format {
         get {
-            return data.getChildren().count > 0 ? .folder : .file
+            return data.getType() == DT_DIR ? .folder : .file
         }
     }
     weak var delegate: FileViewDelegate?
     var recallBlk: (OCFileTreeNode) -> Void = { _ in }
     private var lastClick: TimeInterval = NSDate().timeIntervalSince1970
-    private let data: OCFileTreeNode
-    internal let titleLabel: NSTextField = NSTextField()
+    let data: OCFileTreeNode
+    internal var titleLabel: NSTextField = NSTextField()
     private lazy var iconView: NSImageView = {
         let view: NSImageView
-        if data.getChildren().count > 0 {
+        if data.getType() == DT_DIR {
             view = NSImageView(image: #imageLiteral(resourceName: "FolderIcon"))
         } else {
             view = NSImageView(image: #imageLiteral(resourceName: "FileIcon"))
@@ -59,6 +59,10 @@ extension FileView {
     }
 }
 extension FileView {
+    func resetTitle() {
+        setupTitleLabel()
+        layoutTitleLabel()
+    }
     private func setupSelf() {
         self.wantsLayer = true
         self.shadow = NSShadow()
@@ -69,6 +73,7 @@ extension FileView {
         let gesture = NSClickGestureRecognizer.init(target: self, action: #selector(clickEvent))
         self.addGestureRecognizer(gesture)
     }
+    
     @objc private func clickEvent() {
         if !super.isTint {
             self.delegate?.tintWillSet()
@@ -77,7 +82,7 @@ extension FileView {
         guard format == .folder else {
             return
         }
-        if (NSDate().timeIntervalSince1970-lastClick < 0.2) {
+        if (NSDate().timeIntervalSince1970-lastClick < 0.5) {
             self.delegate?.enterFolder(data: data)
         }
         lastClick = NSDate().timeIntervalSince1970
@@ -94,6 +99,7 @@ extension FileView {
     }
     private func setupTitleLabel() {
         titleLabel.removeFromSuperview()
+        titleLabel = NSTextField()
         titleLabel.stringValue = data.getName()
         titleLabel.isBordered = false
         titleLabel.isEditable = false

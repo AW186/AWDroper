@@ -13,13 +13,13 @@ import Cocoa
 
 class HostViewController: NSViewController {
     var dismissSelf: () -> Void = {}
-    private var server: DroperServer = DroperServer(NSHomeDirectory())
+    private var server: OCDroperServer = OCDroperServer(NSHomeDirectory()+"/Documents")
     lazy var hostMainView: HostView = {
 //        data.setTreeBy(server)
-//        let port = server.start()
+        let port = server.start()
         let view = HostView(data: data.getRootNode())
-        view.port = 8888
-//        print("port: \(port)\n")
+        print("port: \(port)\n")
+        view.port = port
         view.frame = self.view.bounds
         view.passord = self.passord
         view.delegate = self
@@ -27,7 +27,9 @@ class HostViewController: NSViewController {
         return view
     }()
     lazy var data: OCFileTree = {
-        return OCFileTree(NSHomeDirectory(), true)
+        var tree = OCFileTree()
+        tree.setTreeBy(server);
+        return tree
     }()
     var passord: String = ""
     override func viewDidLoad() {

@@ -28,16 +28,21 @@ int server(short port, ServerTask* task) {
     if (err < 0) { perror("bind"); return BIND_ERROR; } //check
     err = listen(sockfd, 10);
     if (err < 0) { perror("listen"); return LISTEN_ERROR; } //check
+    
+    printf("succeed for port: %d", port);
+    pid_t retval;
+    if ((retval = fork()) != 0) {
+        return retval;
+    }
     signal(SIGCHLD, [](int num) {
         int stat;
         waitpid(-1, &stat, WNOHANG);
     });
-    printf("succeed for port: %d", port);
     while(true) {
         struct sockaddr addr;
         socklen_t size;
         int connectfd = accept(sockfd, &addr, &size);
-        if (connectfd < 0) { perror("accept"); return ACCEPT_EROR; } //check
+        if (connectfd < 0) { perror("accept"); } //check
         pid_t pid;
         if((pid = fork()) == 0) {
             task->executeServer(sockfd, addr, size);
@@ -46,7 +51,7 @@ int server(short port, ServerTask* task) {
         }
         close(connectfd);
     }
-    return 0;
+    return SUCCEED;
 }
 
 int server(short port, void* captured, void (*pf)(void* captured, int sockfd, struct sockaddr saddr, socklen_t socklen)) {

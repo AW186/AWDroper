@@ -33,6 +33,32 @@ extension HostFileView {
         super.viewDidMoveToSuperview()
         setupPermitionView()
     }
+    override func rightMouseUp(with event: NSEvent) {
+        let menu = NSMenu.init(title: "options")
+        menu.addItem(NSMenuItem.init(title: "delete", action: #selector(delete), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.init(title: "rename", action: #selector(rename), keyEquivalent: ""))
+        NSMenu.popUpContextMenu(menu, with: event, for: self)
+    }
+    override func mouseDown(with event: NSEvent) {
+        resetTitleLabel()
+    }
+    override func keyDown(with event: NSEvent) {
+        if event.keyCode == 13 {
+            resetTitleLabel()
+        }
+    }
+    private func resetTitleLabel() {
+        delegate?.rename(data: data, name: titleLabel.stringValue)
+        resetTitle()
+    }
+    @objc func rename() {
+        titleLabel.isEditable = true
+        titleLabel.isBordered = true
+    }
+    
+    @objc func delete() {
+        delegate?.delete(data: data)
+    }
 }
 extension HostFileView {
     private func setupPermitionView() {

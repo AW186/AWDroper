@@ -10,13 +10,6 @@
 #include "Tree.hpp"
 
 
-template<typename T>
-void ArrayList<T>::Node::remove(){
-    if (this->nextNode != nullptr) {
-        nextNode->prelink(this->previousNode);
-    }
-    delete this;
-}
 
 template<typename T>
 int ArrayList<T>::insert(T data, int index) {

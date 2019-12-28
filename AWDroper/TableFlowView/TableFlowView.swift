@@ -95,7 +95,6 @@ extension TableFlowView {
             CGFloat(ceil(Double(numberOfCells)/Double(cellsInRow)))*(size.height+heightBetween) - heightBetween
         var posY = totalHeight-size.height-heightFromEdge
         var posX = widthFromEdge
-        print("height: ",totalHeight)
         self.contentView.frame = CGRect.init(x: 0,
                                              y: 0,
                                              width: self.frame.width,

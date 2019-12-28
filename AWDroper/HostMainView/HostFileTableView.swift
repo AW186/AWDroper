@@ -29,6 +29,29 @@ class HostFileTableView: NSView {
     }
 }
 extension HostFileTableView {
+    override func rightMouseUp(with event: NSEvent) {
+        let menu = NSMenu.init(title: "options")
+        menu.addItem(NSMenuItem.init(title: "create new folder", action: #selector(createNewDirectory), keyEquivalent: ""))
+        NSMenu.popUpContextMenu(menu, with: event, for: self)
+    }
+    @objc func createNewDirectory() {
+        let url = data.getAbsPath()+"/new_folder"
+        print(url)
+        var index = 1
+        while(FileManager.default.fileExists(atPath: url+"\(index)")) {
+            index += 1
+        }
+        do {
+            try FileManager.default
+                .createDirectory(atPath: url+"\(index)",
+                                 withIntermediateDirectories: true,
+                                 attributes: nil)
+            data.appendData("new_folder"+"\(index)", Int8(DT_DIR))
+            reload()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     override func draggingEnded(_ sender: NSDraggingInfo) {
         maskView.removeFromSuperview()
     }
@@ -68,6 +91,9 @@ extension HostFileTableView {
 }
 
 extension HostFileTableView {
+    func refresh() {
+        
+    }
     private func setupMaskView() {
         maskView.wantsLayer = true
         maskView.alphaValue = 0.3
@@ -92,6 +118,36 @@ extension HostFileTableView: TableFlowViewDelegate {
 }
 
 extension HostFileTableView: FileViewDelegate {
+    func rename(data: OCFileTreeNode, name: String) {
+        guard data.getName() != name else {
+            return
+        }
+        let previousName = data.getName()
+        guard let oldPath = data.getAbsPath() else { return }
+        data.rename(name);
+        guard let url = data.getAbsPath() else { return }
+        guard !FileManager.default.fileExists(atPath: url) else {
+            _ = alert(question: "File already exists", text: "You can change the file name to another", btns: ["confirm"])
+            data.rename(previousName)
+            return
+        }
+        do {
+            try FileManager.default
+                .moveItem(atPath: oldPath, toPath: url)
+        } catch {
+            print(error.localizedDescription)
+        }
+        data.rename(name)
+    }
+    func delete(data: OCFileTreeNode) {
+        do {
+            try FileManager.default.removeItem(atPath: data.getAbsPath())
+            data.remove()
+            reload()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     func enterFolder(data: OCFileTreeNode) {
         self.data = data
         self.enterFolderBlk(data)

@@ -26,9 +26,7 @@ DroperServer::~DroperServer() {
 }
 
 short DroperServer::startServer() {
-    if ((this->pid = fork()) != 0) {
-        return -1;
-    }
+    
     short port = 7000;
     ServerTask* previousTask = new ServerTask(fileTree, [](void* captured, int sockfd, struct sockaddr saddr, socklen_t socklen) {
         char *buff = ((FileTree *)captured)->toString();
@@ -41,7 +39,8 @@ short DroperServer::startServer() {
         } while(protocol->serverTask(sockfd, saddr, socklen) != -1);
     });
     task->preTask = previousTask;
-    for (short port = 7000; server(port, task) != 0; port++) {
+    
+    for (short port = 7000; (this->pid = server(port, task)) > 0; port++) {
         if (port > 8000) {
             return -1;
         }

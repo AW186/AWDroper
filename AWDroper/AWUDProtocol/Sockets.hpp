@@ -16,13 +16,13 @@
 #include "ClientTask.hpp"
 
 #define SUCCEED             0
-#define SOCKET_ERROR        1
-#define BIND_ERROR          2
-#define LISTEN_ERROR        3
-#define ACCEPT_EROR         4
-#define CONNECT_ERROR       4
+#define SOCKET_ERROR        -1
+#define BIND_ERROR          -2
+#define LISTEN_ERROR        -3
+#define ACCEPT_EROR         -4
+#define CONNECT_ERROR       -4
 
-int server(short port, ServerTask* task);
+pid_t server(short port, ServerTask* task);
 
 int server(short port, void* captured, void (*pf)(void* captured, int sockfd, struct sockaddr saddr, socklen_t socklen));
 

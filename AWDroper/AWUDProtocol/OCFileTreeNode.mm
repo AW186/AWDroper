@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OCFileTreeNode.h"
 #include "FileTreeNode.hpp"
+#include "StringOP.hpp"
 #define NODE ((FileTreeNode *)self->treeNode)
 
 @implementation OCFileTreeNode  {
@@ -34,13 +35,35 @@
     }
     return retval;
 }
+-(char)getType {
+    return  NODE->getData().type;
+}
 -(NSString *)getName {
-    return [NSString stringWithCString: NODE->data
+    return [NSString stringWithCString: NODE->getData().name
                               encoding: NSUTF8StringEncoding];
 }
 -(NSString *)getPath {
     return [NSString stringWithCString: NODE->toPath()
                               encoding: NSUTF8StringEncoding];
+}
+-(NSString *)getAbsPath {
+    return [NSString stringWithCString: NODE->toAbsPath()
+                              encoding: NSUTF8StringEncoding];
+}
+-(void)remove {
+    NODE->removeTreeFromParent();
+}
+-(void)append: (OCFileTreeNode *) node {
+    NODE->appendNode((FileTreeNode *)(node->treeNode));
+}
+-(void)rename: (NSString *) name {
+    char type = NODE->getData().type;
+    NODE->setData(AWFileInfo([name UTF8String], type));
+}
+-(void)appendData: (NSString *) name : (char) type {
+    FileTreeNode *node = new FileTreeNode();
+    node->setData(AWFileInfo([name UTF8String], type));
+    NODE->appendNode(node);
 }
 
 @end

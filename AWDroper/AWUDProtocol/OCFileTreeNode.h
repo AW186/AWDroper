@@ -14,7 +14,13 @@
 }
 -(NSMutableArray<OCFileTreeNode *> *)getChildren;
 -(NSString *)getName;
+-(char)getType;
 -(NSString *)getPath;
+-(NSString *)getAbsPath;
+-(void)rename: (NSString *) name;
+-(void)remove;
+-(void)append: (OCFileTreeNode *) node;
+-(void)appendData: (NSString *) name : (char) type;
 -(OCFileTreeNode *)getSuperNode;
 @end
 

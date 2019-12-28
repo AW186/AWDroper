@@ -18,14 +18,14 @@ Tree<T>::Node::Node(T data) {
 //    node->parent = this;
 //}
 
-template <typename T>
-void Tree<T>::Node::remove() {
-    this->parent->children->forEachNode([=](Node* node)->void {
-        if (node->data == this->data) {
-            node->remove();
-        }
-    });
-}
+//template <typename T>
+//void Tree<T>::Node::remove() {
+//    this->parent->children->forEachNode([=](Node* node)->void {
+//        if (node->data == this->data) {
+//            node->remove();
+//        }
+//    });
+//}
 //template <typename T>
 //int Tree<T>::Node::count() {
 //    return this->children->count();
